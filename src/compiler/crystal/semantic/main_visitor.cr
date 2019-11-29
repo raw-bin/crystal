@@ -2330,7 +2330,22 @@ module Crystal
 
     def visit_va_arg(node)
       arg = call.not_nil!.args[0]? || node.raise("requires type argument")
-      node.type = arg.type.instance_type
+      path = path.as?(Path) || path.raise("argument must be a type")
+
+      lookup_scope = @path_lookup || @scope || @current_type
+
+      find_root_generic_type_parameters = !lookup_scope.is_a?(GenericType)
+
+      type = lookup_scope.lookup_type_var(path,
+        free_vars: free_vars,
+        find_root_generic_type_parameters: find_root_generic_type_parameters,
+        remove_alias: false)
+
+      if type.is_a?(Type)
+        node.type = check_type_in_type_args(type.remove_alias_if_simple).devirtualize
+      else
+        path.raise "argument must be a type"
+      end
     end
 
     def visit_allocate(node)

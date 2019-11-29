@@ -394,6 +394,9 @@ class Crystal::Command
           link_flags << some_link_flags
         end
         target_specific_opts(opts, compiler)
+        opts.on("--mno-red-zone", "Disable generation of red zone") do 
+          compiler.generate_red_zone = false
+        end
         setup_compiler_warning_options(opts, compiler)
       end
 

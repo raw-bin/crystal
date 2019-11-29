@@ -114,6 +114,8 @@ module Crystal
 
     property codegen_target = Config.host_target
 
+    property generate_red_zone = false
+
     getter predefined_constants = Array(Const).new
 
     property compiler : Compiler?
@@ -240,6 +242,8 @@ module Crystal
       types["ThreadLocal"] = @thread_local_annotation = AnnotationType.new self, self, "ThreadLocal"
       types["Deprecated"] = @deprecated_annotation = AnnotationType.new self, self, "Deprecated"
       types["Experimental"] = @experimental_annotation = AnnotationType.new self, self, "Experimental"
+      types["Weak"] = @weak_annotation = AnnotationType.new self, self, "Weak"
+      types["StackRealign"] = @stack_realign_annotation = AnnotationType.new self, self, "StackRealign"
 
       define_crystal_constants
     end
@@ -458,7 +462,8 @@ module Crystal
                      packed_annotation thread_local_annotation no_inline_annotation
                      always_inline_annotation naked_annotation returns_twice_annotation
                      raises_annotation primitive_annotation call_convention_annotation
-                     flags_annotation link_annotation extern_annotation deprecated_annotation experimental_annotation) %}
+                     flags_annotation link_annotation extern_annotation deprecated_annotation 
+                     experimental_annotation weak_annotation stack_realign_annotation) %}
       def {{name.id}}
         @{{name.id}}.not_nil!
       end

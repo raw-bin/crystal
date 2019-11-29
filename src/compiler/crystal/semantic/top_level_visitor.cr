@@ -903,6 +903,8 @@ class Crystal::TopLevelVisitor < Crystal::SemanticVisitor
       call_convention = scope.call_convention
     end
 
+    external.generate_red_zone = @program.generate_red_zone
+
     # We fill the arguments and return type in TypeDeclarationVisitor
     external.doc = node.doc
     external.call_convention = call_convention
@@ -1126,6 +1128,10 @@ class Crystal::TopLevelVisitor < Crystal::SemanticVisitor
         node.returns_twice = true
       when @program.raises_annotation
         node.raises = true
+      when @program.weak_annotation
+        node.weak = true
+      when @program.stack_realign_annotation
+        node.stack_realign = true
       else
         yield annotation_type, ann
       end

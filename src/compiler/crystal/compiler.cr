@@ -7,10 +7,6 @@ require "crystal/digest/md5"
   require "crystal/system/win32/windows_sdk"
 {% end %}
 
-lib LibLLVM
-  fun LLVMDeleteFunction(fn : ValueRef)
-end
-
 module Crystal
   @[Flags]
   enum Debug
@@ -338,10 +334,6 @@ module Crystal
       object_name = output_filename + program.object_extension
 
       optimize llvm_mod if @release
-
-      if !ENV["FREESTANDING"]?.nil?
-        LibLLVM.LLVMDeleteFunction llvm_mod.functions["__crystal_main"].to_unsafe
-      end
 
       if emit = @emit
          unit.emit(@emit_targets, emit_base_filename || output_filename)

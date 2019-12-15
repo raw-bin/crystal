@@ -394,36 +394,8 @@ module Crystal
             @malloc_types.each do |type|
               block = new_block type.to_s
 
-              offsets = BitArray.new 32
-              if !type.packed?
-                ivars = type.all_instance_vars
-                struct_type = llvm_struct_type(type)
-                # puts "#{type} (#{type_id(type)})"
-                ivars.each_with_index do |(name, ivar), idx|
-                  if ivar.type.has_inner_pointers?
-                    offset = @program.instance_offset_of(type.sizeof_type, idx)
-                    bit = offset // (@program.codegen_target.pointer_bit_width // 8)
-                    offsets[bit] = true
-                    # puts " + #{name}, #{ivar.type}, #{offset}"
-                  else
-                    # puts " - #{name}, #{ivar.type}"
-                    if ivar.type.is_a?(MixedUnionType)
-                      offset = @program.instance_offset_of(type.sizeof_type, idx) +
-                        llvm_typer.offset_of(llvm_typer.llvm_type(ivar.type), 1)
-                      bit = offset // llvm_typer.pointer_size
-                      offsets[bit] = true
-                    else
-                      offset = @program.instance_offset_of(type.sizeof_type, idx)
-                      bit = offset // llvm_typer.pointer_size
-                      offsets[bit] = true
-                      # puts " + #{name}, #{ivar.type}, #{offset}"
-                    end
-                  end
-                end
-              end
-
               position_at_end block
-              ret arg.type.const_int(offsets.to_slice.to_unsafe.as(UInt32*).value)
+              ret arg.type.const_int(malloc_offsets(type, ENV["DUMP_GC"]?))
 
               cases[type_id(type)] = block
             end

@@ -200,7 +200,9 @@ module Crystal
       types["Enumerable"] = @enumerable = GenericModuleType.new self, self, "Enumerable", ["T"]
       types["Indexable"] = @indexable = GenericModuleType.new self, self, "Indexable", ["T"]
 
-      types["Array"] = @array = GenericClassType.new self, self, "Array", reference, ["T"]
+      types["Markable"] = markable = @markable = NonGenericClassType.new self, self, "Markable", reference
+
+      types["Array"] = @array = GenericClassType.new self, self, "Array", markable, ["T"]
       types["Hash"] = @hash_type = GenericClassType.new self, self, "Hash", reference, ["K", "V"]
       types["Regex"] = @regex = NonGenericClassType.new self, self, "Regex", reference
       types["Range"] = range = @range = GenericClassType.new self, self, "Range", struct_t, ["B", "E"]

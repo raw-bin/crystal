@@ -44,10 +44,6 @@ module Crystal
       raise "BUG: called type_id for #{type} (#{type.class})"
     end
 
-    def min_type_id(type)
-      @idx[type][0]
-    end
-
     def type_id(type)
       min_max = @ids[type]?
       if min_max
@@ -57,6 +53,10 @@ module Crystal
         put_id type, id, id
         id
       end
+    end
+    
+    def min_type_id(type)
+      @ids[type][0]
     end
 
     def min_max_type_id(type)

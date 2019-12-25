@@ -116,6 +116,10 @@ module Crystal
 
     property generate_red_zone = false
 
+    property freestanding = false
+
+    property generate_finalizers = false
+
     getter predefined_constants = Array(Const).new
 
     property compiler : Compiler?

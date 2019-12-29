@@ -412,15 +412,15 @@ class Crystal::CodeGenVisitor
 
     if target_def.weak?
       context.fun.linkage = LLVM::Linkage::ExternalWeak     
+    elsif target_def.internal?
+      context.fun.linkage = LLVM::Linkage::Internal
+    elsif target_def.no_inline?
+      context.fun.add_attribute LLVM::Attribute::NoInline
+      context.fun.linkage = LLVM::Linkage::External
     end
     
     unless target_def.generate_red_zone?
       context.fun.add_attribute LLVM::Attribute::NoRedZone
-    end
-
-    if target_def.no_inline?
-      context.fun.add_attribute LLVM::Attribute::NoInline
-      context.fun.linkage = LLVM::Linkage::External
     end
   end
 

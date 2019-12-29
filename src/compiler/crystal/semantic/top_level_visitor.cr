@@ -1132,6 +1132,8 @@ class Crystal::TopLevelVisitor < Crystal::SemanticVisitor
         node.weak = true
       when @program.stack_realign_annotation
         node.stack_realign = true
+      when @program.internal_annotation
+        node.internal = true
       else
         yield annotation_type, ann
       end

@@ -264,8 +264,7 @@ module Crystal
       # to avoid some memory being allocated with plain malloc.
       codgen_well_known_functions @node
 
-      initialize_predefined_constants
-      initialize_argv_and_argc unless @program.freestanding
+      initialize_predefined_constants unless @program.freestanding
 
       if @debug.line_numbers?
         set_current_debug_location Location.new(@program.filename || "(no name)", 1, 1)

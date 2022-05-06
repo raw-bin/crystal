@@ -343,7 +343,7 @@ module Crystal
 
       optimize llvm_mod if @release
 
-      if emit = @emit
+      if !@emit_targets.none?
          unit.emit(@emit_targets, emit_base_filename || output_filename)
       else
         target_machine.emit_obj_to_file llvm_mod, object_name
